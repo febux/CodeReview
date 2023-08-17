@@ -4,18 +4,20 @@ x-common-config: &common-config
   APPLICATION_ENV__LOCAL: 'local'
   DEBUG: '1'
   SECRET_KEY: 'dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m'
-  DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 [::1]"
+  DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 [::1] 0.0.0.0"
 
 x-redis-config: &redis-config
-  REDIS_HOST: 'redis'
+  REDIS_USER: ""
+  REDIS_HOST: "code_review__redis"
   REDIS_PORT: 6379
-  REDIS_PASSWORD: 'eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81'
+  REDIS_PASSWORD: "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81"
 
 x-db-config: &db-config
-  POSTGRES_USER: postgres
-  POSTGRES_PASSWORD: postgres
+  POSTGRES_HOST: "code_review__db"
+  POSTGRES_USER: "postgres"
+  POSTGRES_PASSWORD: "postgres"
   POSTGRES_PORT: 5432
-  POSTGRES_DB: main_db
+  POSTGRES_DB: "main_db"
 
 services:
   code_review__web:
@@ -32,7 +34,6 @@ services:
     ports:
       - "8000:8000"
     environment:
-      POSTGRES_HOST: "code_review__db"
       <<: *common-config
       <<: *db-config
     depends_on:
@@ -62,25 +63,39 @@ services:
     volumes:
       - cache:/data
 
-#  code_review__celery:
-#    build: ./project
-#    command: celery -A core worker -l info
-#    volumes:
-#      - ./src:/docker_app/src
-#    environment:
-#      <<: *common-config
-#    depends_on:
-#      - code_review__redis
-#
-#  code_review__celery_beat:
-#    build: ./project
-#    command: celery -A core beat -l info
-#    volumes:
-#      - ./src:/docker_app/src
-#    environment:
-#      <<: *common-config
-#    depends_on:
-#      - code_review__redis
+  code_review__celery:
+    build:
+      context: "."
+      dockerfile: "srv/code-review--web/Dockerfile"
+    command: "celery -A code_review_project worker -l info"
+    networks:
+      - postgres
+      - redis
+    volumes:
+      - ./src:/docker_app/src
+    environment:
+      <<: *common-config
+      <<: *db-config
+      <<: *redis-config
+    depends_on:
+      - code_review__redis
+
+  code_review__celery_beat:
+    build:
+      context: "."
+      dockerfile: "srv/code-review--web/Dockerfile"
+    command: "celery -A code_review_project beat -l info"
+    networks:
+      - postgres
+      - redis
+    volumes:
+      - ./src:/docker_app/src
+    environment:
+      <<: *common-config
+      <<: *db-config
+      <<: *redis-config
+    depends_on:
+      - code_review__redis
 
 
 volumes:

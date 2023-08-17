@@ -13,7 +13,9 @@ drop:
 
 up:
 	docker compose up --remove-orphans --build \
-		code_review__web
+		code_review__web \
+		code_review__celery \
+		code_review__celery_beat
 
 create_super_user:
 	docker compose run code_review__web python manage.py createsuperuser
