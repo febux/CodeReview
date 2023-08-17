@@ -1,0 +1,7 @@
+__pychache__/
+build/
+packages.egg-info/
+dist/
+
+venv
+.idea/
