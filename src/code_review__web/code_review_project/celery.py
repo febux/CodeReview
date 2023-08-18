@@ -17,8 +17,4 @@ app.conf.beat_schedule = {
         "task": "code_review_project.tasks.sample_task",
         "schedule": crontab(minute="*/1"),
     },
-    # "send_email_report": {
-    #     "task": "code_review_project.tasks.send_email_report",
-    #     "schedule": crontab(hour="*/1"),
-    # },
 }
