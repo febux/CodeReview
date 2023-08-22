@@ -19,9 +19,9 @@ jobs:
         pip install pylint
         pip install flake8
         pip install mypy
-    - name: Lint wit PYLINT
-      run: pylint --rcfile=setup.cfg $(git ls-files '*.py')
+    - name: Lint with PYLINT
+      run: pylint --rcfile=setup.cfg
     - name: Lint with MYPY
-      run: mypy --config-file=setup.cfg  $(git ls-files '*.py')
+      run: mypy --config-file=setup.cfg $(git ls-files '*.py')
     - name: Lint with FLAKE8
       run: flake8 --append-config setup.cfg
