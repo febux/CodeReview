@@ -7,3 +7,4 @@ venv
 .idea/
 
 /src/code_review__web/celerybeat-schedule
+/.mypy_cache/

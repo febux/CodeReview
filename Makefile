@@ -5,6 +5,11 @@ ME := $(shell whoami)
 nothing:
 	@echo "do nothing"
 
+lint:
+	pipenv run pylint
+	pipenv run mypy
+	pipenv run flake8
+
 build:
 	docker compose build
 
