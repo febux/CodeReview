@@ -22,6 +22,6 @@ jobs:
     - name: Lint with PYLINT
       run: pylint --disable=C0103,C0111,C0415,E0401,R0903 --ignore=migrations --output-format=colorized $(git ls-files '*.py')
     - name: Lint with MYPY
-      run: mypy /src --follow-imports=normal --ignore-missing-imports --strict --disallow-subclassing-any $(git ls-files '*.py')
+      run: mypy --follow-imports=normal --ignore-missing-imports --strict --disallow-subclassing-any $(git ls-files '*.py')
     - name: Lint with FLAKE8
       run: flake8 --append-config setup.cfg
