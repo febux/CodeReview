@@ -2,14 +2,14 @@ repos:
   - repo: local
     hooks:
       - id: pylint
-        name: pylint
+        name: PyLint
         stages: [commit]
         language: system
         entry: pipenv run pylint
         types: [python]
 
       - id: flake8
-        name: flake8
+        name: Flake8
         stages: [commit]
         language: system
         entry: pipenv run flake8
@@ -17,9 +17,29 @@ repos:
         exclude: setup.py
 
       - id: mypy
-        name: mypy
+        name: MYPY
         stages: [commit]
         language: system
         entry: pipenv run mypy
         types: [python]
         pass_filenames: false
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.1.0
+    exclude: 3rd_party
+    hooks:
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+
+      - id: check-docstring-first
+        name: Check docstring
+
+      - id: check-json
+        name: Check json
+
+      - id: check-yaml
+        name: Check yaml
+        entry: check-yaml --unsafe
+
+      - id: check-added-large-files
+        name: Check added large files
