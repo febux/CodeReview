@@ -20,8 +20,8 @@ jobs:
         pip install flake8
         pip install mypy
     - name: Lint with PYLINT
-      run: pylint --rcfile=setup.cfg
+      run: pylint --disable=C0103,C0111,C0415 --ignore=migrations --output-format=colorized $(git ls-files '*.py')
     - name: Lint with MYPY
-      run: mypy --config-file=setup.cfg $(git ls-files '*.py')
+      run: mypy /src --follow-imports=normal --ignore-missing-imports=true --strict=true --disallow-subclassing-any=false $(git ls-files '*.py')
     - name: Lint with FLAKE8
       run: flake8 --append-config setup.cfg
