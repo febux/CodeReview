@@ -5,6 +5,10 @@ ME := $(shell whoami)
 nothing:
 	@echo "do nothing"
 
+fix_permissions:
+	@echo "me: $(ME)"
+	sudo chown $(ME):$(ME) -R .
+
 lint:
 	pipenv run pylint
 	pipenv run mypy
