@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Any
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -126,7 +126,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-STATICFILES_DIRS = [os.path.join(SITE_ROOT, 'static/')]
+STATIC_ROOT = STATIC_DIR
+STATICFILES_DIRS: List[Any] = []
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

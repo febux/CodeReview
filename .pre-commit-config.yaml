@@ -28,9 +28,6 @@ repos:
     rev: v3.1.0
     exclude: 3rd_party
     hooks:
-      - id: trailing-whitespace
-        name: Trim Trailing Whitespace
-
       - id: check-docstring-first
         name: Check docstring
 
