@@ -5,7 +5,7 @@ from django.db.models import Model, ForeignKey, CASCADE, UUIDField, TextField, B
 from django.contrib.auth.models import User
 
 
-class BaseModel(Model):
+class BaseModel(Model):   # type: ignore
     id = UUIDField(primary_key=True, default=uuid.uuid4)
 
     created_at = DateTimeField(default=datetime.utcnow)
@@ -20,7 +20,7 @@ class File(BaseModel):
 
     is_reviewed = BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self)
 
     class Meta:
@@ -34,7 +34,7 @@ class UserFile(BaseModel):
     fk_user = ForeignKey(User, on_delete=CASCADE)
     fk_file = ForeignKey(File, on_delete=CASCADE)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self)
 
     class Meta:
