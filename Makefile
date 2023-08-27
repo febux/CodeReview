@@ -29,3 +29,6 @@ up:
 create_super_user:
 	docker compose run code_review__web python manage.py createsuperuser
 
+db__upgrade:
+	docker compose run code_review__web python manage.py makemigrations
+	docker compose run code_review__web python manage.py migrate

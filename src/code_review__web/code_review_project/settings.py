@@ -28,7 +28,10 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: List[str] = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")    # type: ignore
+if DEBUG:
+    ALLOWED_HOSTS: List[str] = ['localhost', '127.0.0.1', '[::1]', '0.0.0.0']
+else:
+    ALLOWED_HOSTS: List[str] = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")    # type: ignore
 
 
 # Application definition
@@ -43,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
 
     'code_review__app.apps.CodeReviewAppConfig',
+    'code_review__users.apps.CodeReviewUsersConfig',
 ]
 
 MIDDLEWARE = [
@@ -148,6 +152,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30
+
+LOGIN_URL = 'login'
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@email.com"

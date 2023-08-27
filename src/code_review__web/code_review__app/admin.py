@@ -1,3 +1,6 @@
-# from django.contrib import admin
+from django.contrib import admin
 
-# Register your models here.
+from .models import UserFile, File
+
+admin.site.register(File)
+admin.site.register(UserFile)

@@ -3,7 +3,7 @@ import os
 from celery import Celery
 from celery.schedules import crontab
 
-from src.code_review__web.code_review_project.settings import CELERY_BROKER_URL
+from .settings import CELERY_BROKER_URL
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "code_review_project.settings")
 

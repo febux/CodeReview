@@ -1,7 +1,4 @@
 /*
-Template Name: Electro - HTML Ecommerce Template
-Author: yaminncco
-
 Colors:
 	Body 		: #333
 	Headers 	: #2B2D42
@@ -1921,6 +1918,9 @@ textarea.input {
   border-top: 2px solid #E4E7ED;
   border-bottom: 3px solid #D10024;
   margin-top: 30px;
+  position: fixed;
+  width: 100%;
+  bottom: 280px;
 }
 
 .newsletter {
@@ -2001,6 +2001,12 @@ textarea.input {
 /*=========================================================
 	11 -> FOOTER
 ===========================================================*/
+
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
 
 #footer {
   background: #15161D;
@@ -2189,3 +2195,20 @@ textarea.input {
     margin-top: 10px;
   }
 }
+
+/*----------------------------*\
+	Info message
+\*----------------------------*/
+
+
+.messages {
+  margin: 5px auto;
+  justify-content: center;
+  display: flex;
+}
+  .error {
+    color: red;
+  }
+  .success {
+    color: black;
+  }
