@@ -21,7 +21,7 @@ class File(BaseModel):
     is_reviewed = BooleanField(default=False)
 
     def __str__(self) -> str:
-        return str(self)
+        return f"{self.path} - is_reviewed: {self.is_reviewed}"
 
     class Meta:
         app_label = 'code_review__app'
@@ -35,7 +35,7 @@ class UserFile(BaseModel):
     fk_file = ForeignKey(File, on_delete=CASCADE)
 
     def __str__(self) -> str:
-        return str(self)
+        return f"{self.fk_file} - {self.fk_user}"
 
     class Meta:
         app_label = 'code_review__app'

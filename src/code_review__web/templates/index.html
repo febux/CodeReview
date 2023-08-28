@@ -9,5 +9,13 @@
             {% endfor %}
         </ul>
     {% endif %}
+
+    {% for user_file in user_files %}
+		<div class="section">
+			<div class="container">
+                {{ user_file }}
+			</div>
+		</div>
+    {% endfor %}
 {% endblock content %}
 

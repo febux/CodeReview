@@ -7947,3 +7947,8 @@ textarea.form-control {
         border: 1px solid transparent;
         background: #fbceb5;
         color: #fff; }
+
+.sign-up {
+  color: #D10024;
+  font-size: 16px;
+}

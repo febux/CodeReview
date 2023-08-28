@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import LoginForm
+from .forms import LoginForm, RegisterForm
 
 
 def sign_in(request: HttpRequest) -> HttpResponse:
@@ -36,3 +36,24 @@ def sign_out(request: HttpRequest) -> HttpResponse:
     logout(request)
     messages.success(request, 'You have been logged out.')
     return redirect('login')
+
+
+def sign_up(request: HttpRequest) -> HttpResponse:
+    if request.method == 'GET':
+        form = RegisterForm()
+        return render(request, 'sign_up.html', {'form': form})
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
+            messages.success(request, 'You have singed up successfully.')
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Invalid username or password')
+            return render(request, 'sign_up.html', {'form': form})
+    messages.error(request, 'Invalid request')
+    return redirect('index')
