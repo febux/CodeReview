@@ -14,3 +14,4 @@ class FileForm(Form):    # type: ignore
         self.fields['file_name'].widget.attrs['placeholder'] = 'Name'
         self.fields['file_data'].widget.attrs['class'] = 'form-control-file'
         self.fields['file_data'].widget.attrs['placeholder'] = 'File'
+        self.fields['file_data'].widget.attrs['accept'] = '.py'

@@ -318,16 +318,30 @@ div.row.reviewed {
    height: 200px;
    width: 200px;
    background-image: url("../img/file-reviewed.jpg");
+   margin: 10px 10px 10px 10px;
 }
 div.row.error {
    height: 200px;
    width: 200px;
    background-image: url("../img/file-error.jpg");
+   margin: 10px 10px 10px 10px;
 }
 div.row.in-review {
    height: 200px;
    width: 200px;
    background-image: url("../img/file-in-review.jpg");
+   margin: 10px 10px 10px 10px;
+}
+
+div.row.label {
+   color: black;
+  font-size: medium;
+   margin: 10px 10px 10px 10px;
+}
+
+.section.files {
+  display: inline-flex;
+  margin-left: 5%;
 }
 
 /*----------------------------*\

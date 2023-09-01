@@ -10,7 +10,7 @@
 
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
-        <div class="login-wrap p-0">
+        <div class="input-wrap p-0">
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -18,7 +18,7 @@
                 {% endfor %}
             </ul>
         {% endif %}
-        <form method="POST" class="signup-form">
+        <form method="POST" class="add-file-form" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 {{ form.file_name }}
@@ -36,7 +36,5 @@
         </div>
     </div>
 </div>
-
-
 
 {% endblock content%}
