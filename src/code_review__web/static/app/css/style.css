@@ -314,6 +314,22 @@ textarea.input {
   right: 0px;
 }
 
+div.row.reviewed {
+   height: 200px;
+   width: 200px;
+   background-image: url("../img/file-reviewed.jpg");
+}
+div.row.error {
+   height: 200px;
+   width: 200px;
+   background-image: url("../img/file-error.jpg");
+}
+div.row.in-review {
+   height: 200px;
+   width: 200px;
+   background-image: url("../img/file-in-review.jpg");
+}
+
 /*----------------------------*\
 	Breadcrumb
 \*----------------------------*/

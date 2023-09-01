@@ -39,10 +39,45 @@ services:
     depends_on:
       - code_review__redis
       - code_review__db
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
 
   code_review__db:
     image: postgres:14-alpine
     restart: always
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=50"
+      - "-c"
+      - "shared_buffers=1GB"
+      - "-c"
+      - "effective_cache_size=4GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=512MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "temp_file_limit=10GB"
+      - "-c"
+      - "log_min_duration_statement=200ms"
+      - "-c"
+      - "idle_in_transaction_session_timeout=10s"
+      - "-c"
+      - "lock_timeout=1s"
+      - "-c"
+      - "statement_timeout=60s"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.max=10000"
+      - "-c"
+      - "pg_stat_statements.track=all"
     networks:
       - postgres
     ports:
@@ -51,6 +86,55 @@ services:
       - data:/var/lib/postgresql/data
     environment:
       <<: *db-config
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+        resources:
+          limits:
+            cpus: '1'
+            memory: 4G
+
+  code_review__db_exporter:
+    image: prometheuscommunity/postgres-exporter:v0.10.1
+    environment:
+      DATA_SOURCE_URI: "code_review__db:5432/main_db?sslmode=disable"
+      DATA_SOURCE_USER: "postgres"
+      DATA_SOURCE_PASS: "postgres"
+      PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
+    volumes:
+      - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
+    ports:
+      - "9187:9187"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 500M
+    networks:
+      - postgres
+    depends_on:
+      - code_review__db
+
+  code_review__manager_db:
+    build:
+      context: "."
+      dockerfile: "srv/code-review--db/Dockerfile"
+    command: "echo 'do nothing'"
+    restart: 'no'
+    networks:
+      - postgres
+    volumes:
+      - ./src:/docker_app/src
+    environment:
+      <<: *common-config
+      <<: *db-config
+    depends_on:
+      - code_review__db
 
   code_review__redis:
     image: redis:6.2-alpine
@@ -62,6 +146,11 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
     volumes:
       - cache:/data
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
 
   code_review__celery:
     build:
@@ -79,6 +168,11 @@ services:
       <<: *redis-config
     depends_on:
       - code_review__redis
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 2G
 
   code_review__celery_beat:
     build:
@@ -96,6 +190,11 @@ services:
       <<: *redis-config
     depends_on:
       - code_review__redis
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
 
 
 volumes:

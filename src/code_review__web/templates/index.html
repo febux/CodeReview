@@ -9,13 +9,31 @@
             {% endfor %}
         </ul>
     {% endif %}
-
-    {% for user_file in user_files %}
-		<div class="section">
-			<div class="container">
-                {{ user_file }}
-			</div>
-		</div>
-    {% endfor %}
+    {% if user_files %}
+        {% for user_file in user_files %}
+            <div class="section">
+                <div class="container">
+                    {% if user_file.is_reviewed == 'reviewed' %}
+                        <div class="row reviewed"></div>
+                    {% elif user_file.is_reviewed == 'in_review' %}
+                        <div class="row in-review"></div>
+                    {% else %}
+                        <div class="row error"></div>
+                    {% endif %}
+                    <div class="row">
+                        {{ user_file }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="section">
+            <div class="container">
+                <div class="row">
+                    No one file
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock content %}
 

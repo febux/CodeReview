@@ -24,11 +24,24 @@ up:
 	docker compose up --remove-orphans --build \
 		code_review__web \
 		code_review__celery \
-		code_review__celery_beat
+		code_review__celery_beat \
+		code_review__db_exporter
 
-create_super_user:
-	docker compose run code_review__web python manage.py createsuperuser
+db__create_super_user:
+	docker compose up -d code_review__db
+	docker compose build code_review__manager_db
+	sleep 5
+	docker compose run --rm code_review__manager_db python manage.py createsuperuser
 
-db__upgrade:
-	docker compose run code_review__web python manage.py makemigrations
-	docker compose run code_review__web python manage.py migrate
+db__flush:
+	docker compose up -d code_review__db
+	docker compose build code_review__manager_db
+	sleep 5
+	docker compose run --rm code_review__manager_db python manage.py flush --noinput
+	docker compose run --rm code_review__manager_db python manage.py migrate --fake code_review__app zero
+
+db__migrate:
+	docker compose up -d code_review__db
+	docker compose build code_review__manager_db
+	sleep 5
+	docker compose run --rm code_review__manager_db python manage.py migrate

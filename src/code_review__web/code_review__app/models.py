@@ -1,8 +1,21 @@
 from datetime import datetime
 import uuid
 
-from django.db.models import Model, ForeignKey, CASCADE, UUIDField, TextField, BooleanField, DateTimeField
+from django.db.models import Model, ForeignKey, CASCADE, UUIDField, DateTimeField, CharField, \
+    FileField
 from django.contrib.auth.models import User
+
+
+def user_directory_path(instance: 'File', filename: str) -> str:
+    # file will be uploaded to MEDIA_ROOT / user_<id>/<filename>
+    return f'user_{instance.fk_user.username}/{filename}'
+
+
+REVIEW_CHOICES = [
+    ("reviewed", "Reviewed"),
+    ("not_reviewed", "Not reviewed"),
+    ("in_review", "In review"),
+]
 
 
 class BaseModel(Model):   # type: ignore
@@ -16,29 +29,16 @@ class BaseModel(Model):   # type: ignore
 
 
 class File(BaseModel):
-    path = TextField()
+    file_name = CharField(verbose_name="Name", max_length=120, unique=True)
+    file_data = FileField(verbose_name="File", upload_to=user_directory_path)
+    fk_user = ForeignKey(User, on_delete=CASCADE)
 
-    is_reviewed = BooleanField(default=False)
+    is_reviewed = CharField(verbose_name="Review state", default='not_reviewed', choices=REVIEW_CHOICES)
 
     def __str__(self) -> str:
-        return f"{self.path} - is_reviewed: {self.is_reviewed}"
+        return f"{self.file_name}"
 
     class Meta:
-        app_label = 'code_review__app'
         verbose_name = 'File'
         verbose_name_plural = 'Files'
-        ordering = ('-created_at',)
-
-
-class UserFile(BaseModel):
-    fk_user = ForeignKey(User, on_delete=CASCADE)
-    fk_file = ForeignKey(File, on_delete=CASCADE)
-
-    def __str__(self) -> str:
-        return f"{self.fk_file} - {self.fk_user}"
-
-    class Meta:
-        app_label = 'code_review__app'
-        verbose_name = 'UserFile'
-        verbose_name_plural = 'UserFiles'
         ordering = ('-created_at',)
