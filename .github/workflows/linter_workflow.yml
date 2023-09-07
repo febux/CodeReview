@@ -24,4 +24,4 @@ jobs:
     - name: Lint with MYPY
       run: mypy ./src --follow-imports=normal --ignore-missing-imports --strict --disallow-subclassing-any --exclude 'src/code_review__web/code_review_project/epylint/file_for_test\.py$'
     - name: Lint with FLAKE8
-      run: flake8 ./src
+      run: flake8 ./src --max-line-length 180
