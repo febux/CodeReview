@@ -20,7 +20,7 @@ jobs:
         pip install flake8
         pip install mypy
     - name: Lint with RUFF
-      run: ruff ./src --disable=C0103,C0111,C0415,R0903,R0901,E0401,R1710,R1705,R0901,E1101 --ignore=migrations --output-format=colorized --max-line-length=180 $(git ls-files '*.py')
+      run: ruff check ./src --ignore C0103,C0111,C0415,R0903,R0901,E0401,R1710,R1705,R0901,E1101 --line-length 180 $(git ls-files '*.py')
     - name: Lint with MYPY
       run: mypy --follow-imports=normal --ignore-missing-imports --strict --disallow-subclassing-any $(git ls-files '*.py')
     - name: Lint with FLAKE8
