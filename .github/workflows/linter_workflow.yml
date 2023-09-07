@@ -22,6 +22,6 @@ jobs:
     - name: Lint with RUFF
       run: ruff check ./src --ignore D100,D101,D102,D103,D104,D107,D105,D106,D200,D400,D413,E501,E402,N815,N805,EXE002,RUF012,PGH003,A003,ARG002,RET504,RET502,RET505,G004,RUF100 --line-length 180 $(git ls-files '*.py')
     - name: Lint with MYPY
-      run: mypy --follow-imports=normal --ignore-missing-imports --strict --disallow-subclassing-any --exclude 'src/code_review__web/code_review_project/epylint/file_for_test\.py$'
+      run: mypy ./src --follow-imports=normal --ignore-missing-imports --strict --disallow-subclassing-any --exclude 'src/code_review__web/code_review_project/epylint/file_for_test\.py$'
     - name: Lint with FLAKE8
       run: flake8 --append-config setup.cfg
