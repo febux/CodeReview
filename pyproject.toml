@@ -1,0 +1,198 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "code_review"
+version = "1.0.0"
+authors = [
+    {name = "Alexander Dedkov", email = "deadcove@mail.ru"},
+]
+description = "CodeReview. To improve quality of code review this service was initiated as file storage with lint function."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 1 - Alpha",
+    "Framework :: Django",
+    "Natural Language :: English",
+    "Operating System :: OS Linux",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    "amqp==5.1.1",
+    "asgiref==3.7.2",
+    "async-timeout==4.0.3",
+    "billiard==4.1.0",
+    "celery==5.3.1",
+    "click==8.1.7",
+    "click-didyoumean==0.3.0",
+    "click-plugins==1.1.1",
+    "click-repl==0.3.0",
+    "Django==4.2.4",
+    "kombu==5.3.1",
+    "prompt-toolkit==3.0.39",
+    "psycopg2-binary==2.9.7",
+    "pylint==2.17.5",
+    "python-dateutil==2.8.2",
+    "pytz==2023.3",
+    "redis==5.0.0",
+    "six==1.16.0",
+    "sqlparse==0.4.4",
+    "typing_extensions==4.7.1",
+    "tzdata==2023.3",
+    "vine==5.0.0",
+    "wcwidth==0.2.6",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.optional-dependencies]
+dev = [
+  "flake8===6.1.0",
+  "mypy==1.5.1",
+  "ruff==0.0.287",
+  "django-stubs",
+  "ipdb",
+  "pip-tools",
+  "ruff",
+]
+
+[tool.mypy]
+files = "./src"
+python_version = "3.10"
+follow_imports = "normal"
+ignore_missing_imports = true
+strict = true
+
+exclude = [
+    "src/code_review__web/code_review_project/epylint/file_for_test.py",
+]
+
+[tool.flake8]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D107",
+    "D105",
+    "D106",
+    "D200",
+    "D400",
+    "D413",
+    "E501",
+    "SF01",
+    "T484",
+    "W503",
+    "E402",
+    "N815",
+    "N805",
+    "NQA102",
+]
+max-line-length = 180
+indent-size = 4
+
+[tool.ruff]
+select = [
+    "E",    # pycodestyle
+    "F",    # Pyflakes
+    "W",    # Warning
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "C4",   # flake8-comprehensions
+    "T10",  # flake8-debugger
+    "EXE",  # flake8-executable,
+    "ISC",  # flake8-implicit-str-concat
+    "G",    # flake8-logging-format
+    "PIE",  # flake8-pie
+    "T20",  # flake8-print
+    "PT",   # flake8-pytest-style
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "TID",  # flake8-tidy-imports
+    "ARG",  # flake8-unused-arguments
+    "PGH",  # pygrep-hooks
+    "PLC",  # Pylint Convention
+    "PLE",  # Pylint Errors
+    "PLW",  # Pylint Warnings
+    "RUF",  # Ruff-specific rules
+
+    # ** Things to potentially enable in the future **
+    # DTZ requires all usage of datetime module to have timezone-aware
+    # objects (so have a tz argument or be explicitly UTC).
+    # "DTZ",  # flake8-datetimez
+    # "PTH",  # flake8-use-pathlib
+    # "SIM",  # flake8-simplify
+]
+
+
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D107",
+    "D105",
+    "D106",
+    "D200",
+    "D400",
+    "D413",
+    "E501",
+    "E402",
+    "N815",
+    "N805",
+    "EXE002",
+    "RUF012",
+    "PGH003",
+    "A003",
+    "ARG002",
+    "RET504",
+    "RET502",
+    "RET505",
+    "G004",
+    "RUF100",
+]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+
+# Same as Black.
+line-length = 180
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.8
+target-version = "py310"
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["E402"]
+"src/code_review__web/code_review_project/epylint/file_for_test.py" = ["RUF005", "PLW2901", "T201"]
+"src/code_review__web/code_review_project/epylint/epylint.py" = ["RUF005", "PLW2901", "T201"]

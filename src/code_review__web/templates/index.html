@@ -12,7 +12,7 @@
     {% if user_files %}
         <div class="section files">
         {% for user_file in user_files %}
-            <div class="container"><a href="#">
+            <div class="container"><a href="{{ user_file.id }}">
                 {% if user_file.is_reviewed == 'reviewed' %}
                     <div class="row reviewed"></div>
                 {% elif user_file.is_reviewed == 'in_review' %}

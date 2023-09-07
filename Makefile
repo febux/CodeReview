@@ -5,12 +5,16 @@ ME := $(shell whoami)
 nothing:
 	@echo "do nothing"
 
+clean_up:
+	docker system prune -a
+	docker volume prune -a
+
 fix_permissions:
 	@echo "me: $(ME)"
 	sudo chown $(ME):$(ME) -R .
 
 lint:
-	pipenv run pylint
+	pipenv run ruff ./src
 	pipenv run mypy
 	pipenv run flake8
 
@@ -22,10 +26,11 @@ drop:
 
 up:
 	docker compose up --remove-orphans --build \
+		code_review__db \
+		code_review__redis \
 		code_review__web \
 		code_review__celery \
-		code_review__celery_beat \
-		code_review__db_exporter
+		code_review__celery_beat
 
 db__create_super_user:
 	docker compose up -d code_review__db

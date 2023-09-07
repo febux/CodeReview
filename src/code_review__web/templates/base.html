@@ -51,7 +51,7 @@
                         </ul>
                         <ul class="header-links pull-right">
                             {% if request.user.is_authenticated %}
-                                <li><a href="/login/"><i class="fa fa-user-o"></i> My Account</a></li>
+                                <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
                                 <li><a href="/logout/"><i class="fa fa-sign-out"></i> Logout</a></li>
                             {% else %}
                                 <li><a href="/login/"><i class="fa fa-sign-in"></i> Login</a></li>
@@ -72,7 +72,7 @@
                             <!-- LOGO -->
                             <div class="col-md-3">
                                 <div class="header-logo">
-                                    <a href="/" class="logo">
+                                    <a href="/files/" class="logo">
                                         CODE REVIEW
                                     </a>
                                 </div>
@@ -96,7 +96,7 @@
                             <!-- ACCOUNT -->
                             <div class="col-md-3">
                                 <div class="header-ctn">
-                                    <a href="/files/">
+                                    <a href="/files/create/">
                                         <i class="fa fa-plus-square-o"></i><span> Add file</span>
                                     </a>
                                 </div>

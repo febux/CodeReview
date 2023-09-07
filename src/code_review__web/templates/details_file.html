@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center mb-5">
+        <h2 class="heading-section">{{ user_file.file_name }}</h2>
+        <h3>Review result</h3>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="input-wrap p-0">
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <pre style="width: 100%;">{{ user_file.review_result }}</pre>
+    </div>
+</div>
+
+{% endblock content%}

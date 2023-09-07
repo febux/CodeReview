@@ -1,15 +1,18 @@
 from typing import Any
 
-from django.forms import Form, CharField, FileField
+from django.forms import ModelForm
+
+from src.code_review__web.code_review__app.models import File
 
 
-class FileForm(Form):    # type: ignore
-    file_name = CharField(max_length=120)
-    file_data = FileField()
+class CreateFileForm(ModelForm):    # type: ignore
+
+    class Meta:
+        model = File
+        fields = ['file_name', 'file_data']
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-
         self.fields['file_name'].widget.attrs['class'] = 'form-control'
         self.fields['file_name'].widget.attrs['placeholder'] = 'Name'
         self.fields['file_data'].widget.attrs['class'] = 'form-control-file'

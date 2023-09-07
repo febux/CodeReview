@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class CodeReviewUsersConfig(AppConfig):   # type: ignore
-    name = 'code_review__users'
+    name = 'src.code_review__web.code_review__users'

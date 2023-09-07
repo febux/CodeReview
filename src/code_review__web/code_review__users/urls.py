@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import sign_in, sign_out, sign_up
+from src.code_review__web.code_review__users.views import sign_in, sign_out, sign_up
 
 urlpatterns = [
     path('login/', sign_in, name='login'),

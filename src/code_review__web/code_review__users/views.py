@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from .forms import LoginForm, RegisterForm
+from src.code_review__web.code_review__users.forms import LoginForm, RegisterForm
 
 
 def sign_in(request: HttpRequest) -> HttpResponse:
@@ -21,7 +21,7 @@ def sign_in(request: HttpRequest) -> HttpResponse:
             user = authenticate(request, username=username, password=password)
             if user:
                 login(request, user)
-                messages.success(request, f'Hi {username.title()}, welcome back!')
+                messages.success(request, f'Hi {request.user.username}, welcome back!')
                 return redirect('index')
 
         # form is not valid or user is not authenticated

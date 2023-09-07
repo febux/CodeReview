@@ -11,6 +11,7 @@ Django==4.2.4
 kombu==5.3.1
 prompt-toolkit==3.0.39
 psycopg2-binary==2.9.7
+pylint==2.17.5
 python-dateutil==2.8.2
 pytz==2023.3
 redis==5.0.0

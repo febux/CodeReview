@@ -13,8 +13,8 @@ app.autodiscover_tasks()
 
 
 app.conf.beat_schedule = {
-    "sample_task": {
-        "task": "code_review_project.tasks.sample_task",
+    "check_new_files": {
+        "task": "code_review_project.tasks.check_new_files",
         "schedule": crontab(minute="*/1"),
     },
 }
