@@ -136,7 +136,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'data/')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-STATIC_ROOT = '/home/username/projects/site/assets/'
+STATIC_ROOT = '/home/'
 STATICFILES_DIRS: List[Any] = [os.path.join(SITE_ROOT, 'static/')]
 
 # Default primary key field type
@@ -161,6 +161,11 @@ CELERY_TASK_TIME_LIMIT = 30
 
 LOGIN_URL = 'login'
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@email.com"
-ADMINS = [("testuser", "test.user@email.com"), ]
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_SSL = True
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+ADMINS = [("root", "deadcove@mail.ru"), ]

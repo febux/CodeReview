@@ -7,7 +7,7 @@ repos:
         language: system
         entry: pipenv run ruff ./src
         types: [python]
-        exclude: setup.py src/code_review__web/code_review_project/epylint/epylint.py src/code_review__web/code_review_project/epylint/file_for_test.py
+        exclude: setup.py src/code_review__web/code_review_project/epylint/* src/code_review__web/data/*
 
       - id: flake8
         name: Flake8

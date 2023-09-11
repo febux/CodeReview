@@ -2,7 +2,8 @@ from uuid import UUID
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
-
+from django.core.mail import send_mail
+from src.code_review__web.code_review_project import settings
 
 from src.code_review__web.code_review__app.models_managers import get_not_reviewed_files, get_file_by_id
 from src.code_review__web.code_review_project.epylint.epylint import py_run
@@ -10,7 +11,7 @@ from src.code_review__web.code_review_project.epylint.epylint import py_run
 logger = get_task_logger(__name__)
 
 
-@shared_task    # type: ignore
+@shared_task  # type: ignore
 def process_review(file_id: UUID) -> None:
     file = get_file_by_id(file_id)
     logger.info(f"file path - {file.file_data.path}")
@@ -21,8 +22,10 @@ def process_review(file_id: UUID) -> None:
     file.is_reviewed = "reviewed_ok" if pylint_stdout.getvalue() == '' else "reviewed_not_ok"
     file.save()
 
+    review_done_mailing.delay(file_id)
 
-@shared_task    # type: ignore
+
+@shared_task  # type: ignore
 def check_new_files() -> None:
     not_reviewed_files = get_not_reviewed_files()
     logger.info(f"Not reviewed files: [{not_reviewed_files}]")
@@ -32,3 +35,18 @@ def check_new_files() -> None:
         file_obj.save()
 
         process_review.delay(file.id)
+
+
+@shared_task  # type: ignore
+def review_done_mailing(file_id: UUID) -> None:
+    file = get_file_by_id(file_id)
+    subject = 'Review result'
+    message = f'{file.review_result}'
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[file.fk_user.email],
+    )
+    file.user_notified = True
+    file.save()

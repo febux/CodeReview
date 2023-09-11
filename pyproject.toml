@@ -59,13 +59,14 @@ dev = [
 ]
 
 [tool.mypy]
-files = "./src"
+files = "src"
 python_version = "3.10"
 follow_imports = "normal"
 ignore_missing_imports = true
 strict = true
 exclude = [
-    "src/code_review__web/code_review_project/epylint/file_for_test.py",
+    "src/code_review__web/data/*",
+    "src/code_review__web/code_review_project/epylint/*",
 ]
 
 [tool.flake8]
@@ -92,6 +93,10 @@ ignore = [
 ]
 max-line-length = 180
 indent-size = 4
+exclude = [
+    "src/code_review__web/data/*",
+    "src/code_review__web/code_review_project/epylint/*",
+]
 
 [tool.ruff]
 select = [
@@ -180,6 +185,8 @@ exclude = [
     "dist",
     "node_modules",
     "venv",
+    "./src/code_review__web/data",
+    "./src/code_review__web/code_review_project/epylint",
 ]
 
 # Same as Black.
@@ -193,5 +200,5 @@ target-version = "py310"
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["E402"]
-"src/code_review__web/code_review_project/epylint/file_for_test.py" = ["RUF005", "PLW2901", "T201"]
-"src/code_review__web/code_review_project/epylint/epylint.py" = ["RUF005", "PLW2901", "T201"]
+"src/code_review__web/code_review_project/epylint/*" = ["RUF005", "PLW2901", "T201"]
+"src/code_review__web/data/*" = ["RUF005", "PLW2901", "T201"]
