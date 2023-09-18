@@ -18,7 +18,10 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <pre style="width: 100%;">{{ user_file.review_result }}</pre>
+
+    {% for user_file_log in user_file_logs %}
+        <pre style="width: 100%;">{{ user_file_log.review_result }}</pre>
+    {% endfor %}
     </div>
 </div>
 

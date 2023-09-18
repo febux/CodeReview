@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView, CreateView, DeleteView
 
 from src.code_review__web.code_review__app.forms import CreateFileForm
-from src.code_review__web.code_review__app.models import File
+from src.code_review__web.code_review__app.models import File, FileLog
 from src.code_review__web.code_review__users.models import CustomUser
 
 
@@ -20,6 +20,16 @@ class FileDetail(LoginRequiredMixin, DetailView):    # type: ignore
     def get_object(self, **kwargs: Dict[str, Any]) -> File:
         uid = self.kwargs.get('pk')
         return File.objects.get(pk=uid)  # type: ignore
+
+    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        file = File.objects.get(pk=self.kwargs.get('pk'))
+        context['time_now'] = datetime.utcnow()
+        context['user_file_logs'] = FileLog.objects.filter(
+            fk_file__fk_user__id=self.request.user.id,
+            fk_file__id=file.id,
+        ).order_by('-id')
+        return context    # type: ignore
 
 
 class FilesList(LoginRequiredMixin, ListView):    # type: ignore
@@ -51,7 +61,7 @@ class FilesFilter(ListView):    # type: ignore
 
 
 class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
-    permission_required = ('files.add_file', )
+    # permission_required = ('files.add_file', )
     template_name = 'add_file.html'
     form_class = CreateFileForm
     success_url = '/files/'
@@ -77,7 +87,7 @@ class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
 
 # дженерик для удаления товара
 class FileDeleteView(LoginRequiredMixin, DeleteView):    # type: ignore
-    permission_required = ('files.delete_file',)
+    # permission_required = ('files.delete_file',)
     template_name = 'delete_file.html'
     queryset = File.objects.all()
     success_url = '/files/'

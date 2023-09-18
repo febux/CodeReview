@@ -340,6 +340,7 @@ div.row.label {
 }
 
 .section.files {
+  min-height: 425px;
   display: inline-flex;
   margin-left: 5%;
 }
@@ -835,9 +836,9 @@ div.row.label {
   border-top: 2px solid #E4E7ED;
   border-bottom: 3px solid #D10024;
   margin-top: 30px;
-  position: inherit;
+  position: relative;
   width: 100%;
-  bottom: 190px;
+  bottom: 0;
   left: 0;
   right: 0;
 }
@@ -922,7 +923,8 @@ div.row.label {
 ===========================================================*/
 
 footer {
-  position: inherit;
+  position: relative;
+  margin-top: auto;
   bottom: 0;
   left: 0;
   right: 0;

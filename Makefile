@@ -43,7 +43,12 @@ db__flush:
 	docker compose build code_review__manager_db
 	sleep 5
 	docker compose run --rm code_review__manager_db python manage.py flush --noinput
-	docker compose run --rm code_review__manager_db python manage.py migrate --fake code_review__app zero
+
+db__make_migrations:
+	docker compose up -d code_review__db
+	docker compose build code_review__manager_db
+	sleep 5
+	docker compose run --rm code_review__manager_db python manage.py makemigrations
 
 db__migrate:
 	docker compose up -d code_review__db

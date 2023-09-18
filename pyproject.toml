@@ -44,9 +44,6 @@ dependencies = [
     "wcwidth==0.2.6",
 ]
 
-[tool.setuptools.packages.find]
-where = ["src"]
-
 [project.optional-dependencies]
 dev = [
   "flake8===6.1.0",

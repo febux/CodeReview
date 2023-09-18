@@ -2,7 +2,7 @@ from uuid import UUID
 
 from django.db.models import QuerySet
 
-from src.code_review__web.code_review__app.models import File
+from src.code_review__web.code_review__app.models import FileLog, File
 
 
 def get_files_by_user_id(user_id: UUID) -> QuerySet:
@@ -11,6 +11,10 @@ def get_files_by_user_id(user_id: UUID) -> QuerySet:
 
 def get_file_by_id(file_id: UUID) -> File:
     return File.objects.filter(id=file_id).first()  # type: ignore
+
+
+def get_file_log_by_file_id(file_id: UUID) -> FileLog:
+    return FileLog.objects.filter(fk_file__id=file_id).first()  # type: ignore
 
 
 def get_not_reviewed_files() -> QuerySet:
