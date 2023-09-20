@@ -10,7 +10,7 @@
         </ul>
     {% endif %}
     {% if user_files %}
-        <div class="section files">
+        <div class="section fixed files">
         {% for user_file in user_files %}
             <div class="container"><a href="{{ user_file.id }}">
                 {% if user_file.is_reviewed == 'reviewed' %}
@@ -27,7 +27,7 @@
         {% endfor %}
         </div>
     {% else %}
-        <div class="section">
+        <div class="section fixed">
             <div class="container">
                 <div class="row">
                     No one file

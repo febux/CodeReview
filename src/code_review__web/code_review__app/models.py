@@ -1,7 +1,7 @@
 from datetime import datetime
 import uuid
 
-from django.conf import settings
+from django.contrib.auth.models import User
 from django.db.models import Model, ForeignKey, CASCADE, UUIDField, DateTimeField, CharField, \
     FileField, TextField, BooleanField
 
@@ -33,7 +33,7 @@ class BaseModel(Model):   # type: ignore
 class File(BaseModel):
     file_name = CharField(verbose_name="Name", max_length=120, unique=True)
     file_data = FileField(verbose_name="File", upload_to=user_directory_path)
-    fk_user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+    fk_user = ForeignKey(User, on_delete=CASCADE)
 
     is_reviewed = CharField(verbose_name="Review state", default='not_reviewed_new', choices=REVIEW_CHOICES)
 

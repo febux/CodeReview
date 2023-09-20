@@ -2,13 +2,13 @@ from datetime import datetime
 from typing import Any, Dict, Tuple
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView, CreateView, DeleteView
 
 from src.code_review__web.code_review__app.forms import CreateFileForm
 from src.code_review__web.code_review__app.models import File, FileLog
-from src.code_review__web.code_review__users.models import CustomUser
 
 
 class FileDetail(LoginRequiredMixin, DetailView):    # type: ignore
@@ -67,7 +67,7 @@ class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
     success_url = '/files/'
 
     def post(self, request: Any, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> HttpResponseRedirect:
-        current_user = CustomUser.objects.filter(id=request.user.id).first()
+        current_user = User.objects.filter(id=request.user.id).first()
         instance = File(file_name=request.POST["file_name"], file_data=request.FILES["file_data"])
         instance.fk_user = current_user
         instance.save()

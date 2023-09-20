@@ -1,21 +1,12 @@
-# pull official base image
-FROM python:3.10-alpine
+FROM python:3.10-slim
 
-# set work directory
 WORKDIR /docker_app
 
-# copy project
 COPY ./src /docker_app/src
+COPY pyproject.toml /docker_app/pyproject.toml
 
-# set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-
-# install dependencies
-RUN pip install --upgrade pip
+RUN python -m pip install --upgrade pip && python -m pip install --upgrade build
 RUN --mount=type=cache,target=/root/.cache/pip \
-      pip install .
-
-RUN export PATH=/usr/lib/postgresql/14.8/bin/:$PATH
+      python -m pip install .
 
 WORKDIR /docker_app/src/code_review__web

@@ -52,9 +52,9 @@
                         <ul class="header-links pull-right">
                             {% if request.user.is_authenticated %}
                                 <li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
-                                <li><a href="/logout/"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                <li><a href="{% url 'account_logout' %}"><i class="fa fa-sign-out"></i> Logout</a></li>
                             {% else %}
-                                <li><a href="/login/"><i class="fa fa-sign-in"></i> Login</a></li>
+                                <li><a href="{% url 'account_login' %}"><i class="fa fa-sign-in"></i> Login</a></li>
                             {% endif %}
                         </ul>
                     </div>
@@ -72,7 +72,7 @@
                             <!-- LOGO -->
                             <div class="col-md-3">
                                 <div class="header-logo">
-                                    <a href="/files/" class="logo">
+                                    <a href="/" class="logo">
                                         CODE REVIEW
                                     </a>
                                 </div>
@@ -134,7 +134,7 @@
 		<!-- /NAVIGATION -->
         {% block content %}
 		<!-- SECTION -->
-		<div class="section">
+		<div class="section fixed">
 			<!-- container -->
 			<div class="container">
 				<!-- row -->
@@ -148,7 +148,7 @@
 		<!-- /SECTION -->
 
 		<!-- SECTION -->
-		<div class="section">
+		<div class="section fixed">
 			<!-- container -->
 			<div class="container">
 				<!-- row -->

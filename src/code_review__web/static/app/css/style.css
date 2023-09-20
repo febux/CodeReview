@@ -339,8 +339,11 @@ div.row.label {
    margin: 10px 10px 10px 10px;
 }
 
-.section.files {
+.section.fixed {
   min-height: 425px;
+}
+
+.section.fixed.files {
   display: inline-flex;
   margin-left: 5%;
 }
