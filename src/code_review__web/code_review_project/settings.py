@@ -121,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ACCOUNT_FORMS = {
     'login': 'accounts.forms.CustomLoginForm',
-    'signup': 'accounts.forms.CustomLoginForm',
+    'signup': 'accounts.forms.RegisterForm',
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -189,7 +189,7 @@ SITE_ID = 1
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
-ACCOUNT_SESSION_REMEMBER = True
+# ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_UNIQUE_EMAIL = True
 

@@ -27,7 +27,7 @@ services:
     build:
       context: "."
       dockerfile: "srv/code-review--web/Dockerfile"
-    command: "python manage.py runserver 0.0.0.0:8000"
+    command: "python manage.py runserver ${DJANGO_HOST}:${DJANGO_PORT}"
     restart: 'no'
     networks:
       - postgres

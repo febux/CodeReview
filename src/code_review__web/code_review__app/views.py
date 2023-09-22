@@ -67,11 +67,15 @@ class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
     success_url = '/files/'
 
     def post(self, request: Any, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> HttpResponseRedirect:
-        current_user = User.objects.filter(id=request.user.id).first()
-        instance = File(file_name=request.POST["file_name"], file_data=request.FILES["file_data"])
-        instance.fk_user = current_user
-        instance.save()
-        return redirect('index')
+        file_form = CreateFileForm(request.POST, request.FILES)
+
+        if file_form.is_valid():
+            current_user = User.objects.filter(id=request.user.id).first()
+            instance = File(file_name=request.POST["file_name"], file_data=request.FILES["file_data"])
+            instance.fk_user = current_user
+            instance.save()
+            return redirect('index')
+        return redirect('file_add')
 
 
 # class FileEditView(LoginRequiredMixin, UpdateView):    # type: ignore

@@ -2,18 +2,10 @@
 {% load static %}
 
 {% block content %}
-    {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
     {% if user_files %}
-        <div class="section fixed files">
         {% for user_file in user_files %}
-            <div class="container"><a href="{{ user_file.id }}">
-                {% if user_file.is_reviewed == 'reviewed' %}
+            <div class="container"><a href="files/{{ user_file.id }}">
+                {% if user_file.is_reviewed == 'reviewed_ok' %}
                     <div class="row reviewed"></div>
                 {% elif user_file.is_reviewed == 'in_review' %}
                     <div class="row in-review"></div>
@@ -25,13 +17,10 @@
                 </div>
             </a></div>
         {% endfor %}
-        </div>
     {% else %}
-        <div class="section fixed">
-            <div class="container">
-                <div class="row">
-                    No one file
-                </div>
+        <div class="container">
+            <div class="row">
+                No one file
             </div>
         </div>
     {% endif %}

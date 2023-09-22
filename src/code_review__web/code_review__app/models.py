@@ -2,6 +2,7 @@ from datetime import datetime
 import uuid
 
 from django.contrib.auth.models import User
+from django.core.validators import FileExtensionValidator
 from django.db.models import Model, ForeignKey, CASCADE, UUIDField, DateTimeField, CharField, \
     FileField, TextField, BooleanField
 
@@ -32,10 +33,18 @@ class BaseModel(Model):   # type: ignore
 
 class File(BaseModel):
     file_name = CharField(verbose_name="Name", max_length=120, unique=True)
-    file_data = FileField(verbose_name="File", upload_to=user_directory_path)
+    file_data = FileField(
+        verbose_name="File",
+        upload_to=user_directory_path,
+        validators=[FileExtensionValidator(allowed_extensions=['py'])],
+    )
     fk_user = ForeignKey(User, on_delete=CASCADE)
 
-    is_reviewed = CharField(verbose_name="Review state", default='not_reviewed_new', choices=REVIEW_CHOICES)
+    is_reviewed = CharField(
+        verbose_name="Review state",
+        default='not_reviewed_new',
+        choices=REVIEW_CHOICES,
+    )
 
     def __str__(self) -> str:
         return f"{self.file_name}"
