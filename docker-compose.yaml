@@ -3,24 +3,24 @@ version: '3.8'
 x-common-config: &common-config
   APPLICATION_ENV__LOCAL: 'local'
   DEBUG: 'True'
-  SECRET_KEY: 'dbaa1_i7%*3r9-=z-+_mz4r-!qeed@(-a_r(g@k8jo8y3r27%m'
+  SECRET_KEY: ${SECRET_KEY_DJANGO}
   DJANGO_ALLOWED_HOSTS: "localhost 127.0.0.1 [::1] 0.0.0.0"
-  EMAIL_HOST_USER: 'davydenkoraar@mail.ru'
-  EMAIL_HOST_PASSWORD: 'mMexqfnGMzR0mMVr7xmk'
-  DEFAULT_FROM_EMAIL: 'davydenkoraar@mail.ru'
+  EMAIL_HOST_USER: ${EMAIL_HOST_USER}
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}
+  DEFAULT_FROM_EMAIL: ${EMAIL_HOST_USER}
 
 x-redis-config: &redis-config
-  REDIS_USER: ""
+  REDIS_USER: ${REDIS_USER}
   REDIS_HOST: "code_review__redis"
-  REDIS_PORT: 6379
-  REDIS_PASSWORD: "eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81"
+  REDIS_PORT: ${REDIS_PORT}
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
 
 x-db-config: &db-config
   POSTGRES_HOST: "code_review__db"
-  POSTGRES_USER: "postgres"
-  POSTGRES_PASSWORD: "postgres"
-  POSTGRES_PORT: 5432
-  POSTGRES_DB: "main_db"
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_PORT: ${POSTGRES_PORT}
+  POSTGRES_DB: ${POSTGRES_DB}
 
 services:
   code_review__web:
@@ -35,7 +35,7 @@ services:
     volumes:
       - ./src:/docker_app/src
     ports:
-      - "8000:8000"
+      - "${DJANGO_PORT}:${DJANGO_PORT}"
     environment:
       <<: *common-config
       <<: *db-config
@@ -84,13 +84,13 @@ services:
     networks:
       - postgres
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
       - data:/var/lib/postgresql/data
     environment:
       <<: *db-config
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_PASSWORD}" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -104,9 +104,9 @@ services:
   code_review__db_exporter:
     image: prometheuscommunity/postgres-exporter:v0.10.1
     environment:
-      DATA_SOURCE_URI: "code_review__db:5432/main_db?sslmode=disable"
-      DATA_SOURCE_USER: "postgres"
-      DATA_SOURCE_PASS: "postgres"
+      DATA_SOURCE_URI: "code_review__db:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable"
+      DATA_SOURCE_USER: ${POSTGRES_USER}
+      DATA_SOURCE_PASS: ${POSTGRES_PASSWORD}
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     volumes:
       - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
@@ -145,8 +145,8 @@ services:
     networks:
       - redis
     ports:
-      - "6379:6379"
-    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+      - "${REDIS_PORT}:${REDIS_PORT}"
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes:
       - cache:/data
     deploy:
