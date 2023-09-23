@@ -6,7 +6,10 @@ dist/
 venv
 .idea/
 
+.env
+
 /src/code_review__web/celerybeat-schedule
 /.mypy_cache/
 /.ruff_cache/
 /queries.yaml/
+/src/code_review__web/static/admin/
