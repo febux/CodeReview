@@ -3,7 +3,7 @@ To improve quality of code review this service was initiated as file storage wit
 
 
 
-`.env` file must be added and must contain:
+`.env` file must be added in project root and must contain:
 ```
 DJANGO_HOST="0.0.0.0" # default 0.0.0.0 for local access
 DJANGO_PORT="8000" # default 8000
