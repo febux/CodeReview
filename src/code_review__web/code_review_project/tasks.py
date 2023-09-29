@@ -8,7 +8,7 @@ from src.code_review__web.code_review__app.models import FileLog
 from src.code_review__web.code_review_project import settings
 
 from src.code_review__web.code_review__app.models_managers import get_not_reviewed_files, get_file_log_by_file_id, get_file_by_id
-from src.code_review__web.code_review_project.epylint.epylint import py_run
+from src.code_review__web.code_review_project.utils.console_file_lint_runner import console_file_lint_runner, Linter
 
 logger = get_task_logger(__name__)
 
@@ -18,11 +18,12 @@ def process_review(file_id: UUID) -> None:
     file = get_file_by_id(file_id)
     logger.info(f"file path - {file.file_data.path}")
 
-    pylint_stdout, pylint_stderr = py_run(file.file_data.path, return_std=True)
-    logger.info(f"Result {pylint_stdout.getvalue(), pylint_stderr.getvalue()}")
-    review_result = FileLog(review_result=pylint_stdout.getvalue(), fk_file=file)
+    lint_stdout, lint_return_code = console_file_lint_runner(file.file_data.path, linter=Linter.MYPY)
+
+    logger.info(f"Result {lint_stdout, lint_return_code}")
+    review_result = FileLog(review_result=lint_stdout, fk_file=file)
     review_result.save()
-    file.is_reviewed = "reviewed_ok" if pylint_stdout.getvalue() == '' else "reviewed_not_ok"
+    file.is_reviewed = "reviewed_ok" if not lint_return_code else "reviewed_not_ok"
     file.save()
 
     review_done_mailing.delay(file_id)

@@ -2,10 +2,13 @@
 
 {% block content %}
 <div class="row justify-content-center">
+    <div class="col-md-2 text-center mb-5"></div>
     <div class="col-md-6 text-center mb-5">
         <h2 class="heading-section">{{ user_file.file_name }}</h2>
         <h3>Review result</h3>
     </div>
+    <h3 class="col-md-1 text-center mb-5"><a href="{% url 'file_edit' user_file.id %}"><i class="fa fa-pencil-square-o">Edit</i></a></h3>
+    <h3 class="col-md-1 text-center mb-5"><a href="{% url 'file_delete' user_file.id %}"><i class="fa fa-trash-o">Delete</i></a></h3>
 </div>
 
 <div class="row justify-content-center">
@@ -19,6 +22,7 @@
     {% endif %}
 
     {% for user_file_log in user_file_logs %}
+        <h5>{{ user_file_log.date }}</h5>
         <pre style="width: 100%;">{{ user_file_log.review_result }}</pre>
     {% endfor %}
     </div>

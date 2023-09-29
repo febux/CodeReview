@@ -10,7 +10,7 @@ DJANGO_PORT="8000" # default 8000
 
 SECRET_KEY_DJANGO="some-long-string"
 
-EMAIL_HOST_USER="example@example.com"
+EMAIL_HOST_USER="example@mail.ru"
 EMAIL_HOST_PASSWORD="your-api-email-password"
 
 POSTGRES_USER="example"

@@ -46,12 +46,13 @@ dependencies = [
     "vine==5.0.0",
     "wcwidth==0.2.6",
     "django-allauth==0.56.1",
+    "mypy==1.5.1",
+    "mypy-extensions==1.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
   "flake8===6.1.0",
-  "mypy==1.5.1",
   "ruff==0.0.287",
   "django-stubs",
   "ipdb",
@@ -67,7 +68,6 @@ ignore_missing_imports = true
 strict = true
 exclude = [
     "src/code_review__web/data/*",
-    "src/code_review__web/code_review_project/epylint/*",
 ]
 
 [tool.flake8]

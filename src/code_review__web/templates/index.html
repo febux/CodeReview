@@ -4,7 +4,7 @@
 {% block content %}
     {% if user_files %}
         {% for user_file in user_files %}
-            <div class="container"><a href="files/{{ user_file.id }}">
+            <div class="container"><a href="{% url 'file_details' user_file.id %}">
                 {% if user_file.is_reviewed == 'reviewed_ok' %}
                     <div class="row reviewed"></div>
                 {% elif user_file.is_reviewed == 'in_review' %}
