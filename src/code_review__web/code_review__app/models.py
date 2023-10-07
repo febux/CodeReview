@@ -22,25 +22,25 @@ REVIEW_CHOICES = [
 
 
 class BaseModel(Model):
-    id = UUIDField(primary_key=True, default=uuid.uuid4)
+    id = UUIDField(primary_key=True, default=uuid.uuid4)    # type: ignore
 
-    created_at = DateTimeField(default=datetime.utcnow)
-    updated_at = DateTimeField(default=datetime.utcnow)
+    created_at = DateTimeField(default=datetime.utcnow)    # type: ignore
+    updated_at = DateTimeField(default=datetime.utcnow)    # type: ignore
 
     class Meta:
         abstract = True
 
 
 class File(BaseModel):
-    file_name = CharField(verbose_name="Name", max_length=120, unique=True)
-    file_data = FileField(
+    file_name = CharField(verbose_name="Name", max_length=120, unique=True)    # type: ignore
+    file_data = FileField(    # type: ignore
         verbose_name="File",
         upload_to=user_directory_path,
         validators=[FileExtensionValidator(allowed_extensions=['py'])],
     )
-    fk_user = ForeignKey(User, on_delete=CASCADE)
+    fk_user = ForeignKey(User, on_delete=CASCADE)    # type: ignore
 
-    is_reviewed = CharField(
+    is_reviewed = CharField(    # type: ignore
         verbose_name="Review state",
         default='not_reviewed_new',
         choices=REVIEW_CHOICES,
@@ -56,11 +56,11 @@ class File(BaseModel):
 
 
 class FileLog(BaseModel):
-    date = DateTimeField(default=datetime.utcnow)
-    review_result = TextField(verbose_name="Review result", default='')
-    fk_file = ForeignKey(File, on_delete=CASCADE)
+    date = DateTimeField(default=datetime.utcnow)    # type: ignore
+    review_result = TextField(verbose_name="Review result", default='')    # type: ignore
+    fk_file = ForeignKey(File, on_delete=CASCADE)    # type: ignore
 
-    user_notified = BooleanField(verbose_name="Email notification was sent", default=False)
+    user_notified = BooleanField(verbose_name="Email notification was sent", default=False)    # type: ignore
 
     def __str__(self) -> str:
         return f"{self.fk_file.file_name} - {self.date}"

@@ -13,13 +13,13 @@ from src.code_review__web.code_review__app.forms import CreateFileForm, UpdateFi
 from src.code_review__web.code_review__app.models import File, FileLog
 
 
-class FileDetail(LoginRequiredMixin, DetailView):    # type: ignore
+class FileDetail(LoginRequiredMixin, DetailView[File]):
     model = File
     template_name = 'details_file.html'
     context_object_name = 'user_file'
     queryset = File.objects.all()
 
-    def get_object(self, queryset: QuerySet[Any] | None = None) -> File | None:
+    def get_object(self, queryset: QuerySet[Any] | None = None) -> File:
         uid = self.kwargs.get('pk')
         return File.objects.get(pk=uid)
 
@@ -35,7 +35,7 @@ class FileDetail(LoginRequiredMixin, DetailView):    # type: ignore
         return context
 
 
-class FilesList(LoginRequiredMixin, ListView):    # type: ignore
+class FilesList(LoginRequiredMixin, ListView[File]):
     model = File
     queryset = File.objects.order_by('-id')
     template_name = 'index.html'
@@ -49,21 +49,21 @@ class FilesList(LoginRequiredMixin, ListView):    # type: ignore
         return context
 
 
-class FilesFilter(ListView):    # type: ignore
-    model = File
-    queryset = File.objects.order_by('-id')
-    template_name = 'search.html'
-    context_object_name = 'user_files'
-    ordering = ['-created_at']
-    paginate_by = 10
+# class FilesFilter(ListView):
+#     model = File
+#     queryset = File.objects.order_by('-id')
+#     template_name = 'search.html'
+#     context_object_name = 'user_files'
+#     ordering = ['-created_at']
+#     paginate_by = 10
+#
+#     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+#         context = super().get_context_data(**kwargs)
+#         # context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
+#         return context
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        # context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
-        return context
 
-
-class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
+class FileAddView(LoginRequiredMixin, CreateView[File, CreateFileForm]):
     template_name = 'add_file.html'
     form_class = CreateFileForm
     success_url = '/'
@@ -80,12 +80,12 @@ class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
         return redirect('file_add')
 
 
-class FileEditView(LoginRequiredMixin, UpdateView):    # type: ignore
+class FileEditView(LoginRequiredMixin, UpdateView[File, UpdateFileForm]):
     template_name = 'edit_file.html'
     form_class = UpdateFileForm
     success_url = '/'
 
-    def get_object(self, queryset: QuerySet[Any] | None = None) -> File | None:
+    def get_object(self, queryset: QuerySet[Any] | None = None) -> File:
         uid = self.kwargs.get('pk')
         return File.objects.get(pk=uid)
 
@@ -109,13 +109,13 @@ class FileEditView(LoginRequiredMixin, UpdateView):    # type: ignore
         return redirect('index')
 
 
-class FileDeleteView(LoginRequiredMixin, DeleteView):    # type: ignore
+class FileDeleteView(LoginRequiredMixin, DeleteView[File]):     # type: ignore
     template_name = 'delete_file.html'
     queryset = File.objects.all()
     context_object_name = 'user_file'
     success_url = '/'
 
-    def get_object(self, queryset: QuerySet[Any] | None = None) -> File | None:
+    def get_object(self, queryset: QuerySet[Any] | None = None) -> File:
         uid = self.kwargs.get('pk')
         return File.objects.get(pk=uid)
 

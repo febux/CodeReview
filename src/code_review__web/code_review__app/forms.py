@@ -5,7 +5,7 @@ from django.forms import ModelForm
 from src.code_review__web.code_review__app.models import File
 
 
-class CreateFileForm(ModelForm):    # type: ignore
+class CreateFileForm(ModelForm[File]):
 
     class Meta:
         model = File
@@ -20,7 +20,7 @@ class CreateFileForm(ModelForm):    # type: ignore
         self.fields['file_data'].widget.attrs['accept'] = '.py'
 
 
-class UpdateFileForm(ModelForm):    # type: ignore
+class UpdateFileForm(ModelForm[File]):
 
     class Meta:
         model = File
