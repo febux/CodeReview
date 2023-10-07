@@ -21,7 +21,7 @@ REVIEW_CHOICES = [
 ]
 
 
-class BaseModel(Model):   # type: ignore
+class BaseModel(Model):
     id = UUIDField(primary_key=True, default=uuid.uuid4)
 
     created_at = DateTimeField(default=datetime.utcnow)

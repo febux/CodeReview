@@ -4,8 +4,9 @@ from typing import Any, Dict, Tuple
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
+from django.db.models.query import QuerySet
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
 
 from src.code_review__web.code_review__app.forms import CreateFileForm, UpdateFileForm
@@ -18,19 +19,20 @@ class FileDetail(LoginRequiredMixin, DetailView):    # type: ignore
     context_object_name = 'user_file'
     queryset = File.objects.all()
 
-    def get_object(self, **kwargs: Dict[str, Any]) -> File:
+    def get_object(self, queryset: QuerySet[Any] | None = None) -> File | None:
         uid = self.kwargs.get('pk')
-        return File.objects.get(pk=uid)  # type: ignore
+        return File.objects.get(pk=uid)
 
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        file = File.objects.get(pk=self.kwargs.get('pk'))
+        file: File | None = File.objects.get(pk=self.kwargs.get('pk'))
         context['time_now'] = datetime.utcnow()
-        context['user_file_logs'] = FileLog.objects.filter(
-            fk_file__fk_user__id=self.request.user.id,
-            fk_file__id=file.id,
-        ).order_by('-date')
-        return context    # type: ignore
+        if file:
+            context['user_file_logs'] = FileLog.objects.filter(
+                fk_file__fk_user__id=self.request.user.id,    # type: ignore
+                fk_file__id=file.id,
+            ).order_by('-date')
+        return context
 
 
 class FilesList(LoginRequiredMixin, ListView):    # type: ignore
@@ -40,11 +42,11 @@ class FilesList(LoginRequiredMixin, ListView):    # type: ignore
     context_object_name = 'user_files'
     paginate_by = 10
 
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['time_now'] = datetime.utcnow()
-        context['user_files'] = File.objects.filter(fk_user__id=self.request.user.id).order_by('-id')
-        return context    # type: ignore
+        context['user_files'] = File.objects.filter(fk_user__id=self.request.user.id).order_by('-id')    # type: ignore
+        return context
 
 
 class FilesFilter(ListView):    # type: ignore
@@ -55,10 +57,10 @@ class FilesFilter(ListView):    # type: ignore
     ordering = ['-created_at']
     paginate_by = 10
 
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         # context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
-        return context    # type: ignore
+        return context
 
 
 class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
@@ -70,8 +72,8 @@ class FileAddView(LoginRequiredMixin, CreateView):    # type: ignore
         file_form = CreateFileForm(request.POST, request.FILES)
 
         if file_form.is_valid():
-            current_user = User.objects.filter(id=request.user.id).first()
-            instance = File(file_name=request.POST["file_name"], file_data=request.FILES["file_data"])
+            current_user: User | None = User.objects.filter(id=request.user.id).first()
+            instance: File = File(file_name=request.POST["file_name"], file_data=request.FILES["file_data"])
             instance.fk_user = current_user
             instance.save()
             return redirect('index')
@@ -83,25 +85,28 @@ class FileEditView(LoginRequiredMixin, UpdateView):    # type: ignore
     form_class = UpdateFileForm
     success_url = '/'
 
-    def get_object(self, **kwargs: Dict[str, Any]) -> File:
+    def get_object(self, queryset: QuerySet[Any] | None = None) -> File | None:
         uid = self.kwargs.get('pk')
-        return File.objects.get(pk=uid)  # type: ignore
+        return File.objects.get(pk=uid)
 
-    def post(self, request: Any, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> HttpResponseRedirect:
+    def post(self, request: Any, *args: Any, **kwargs: Any) -> HttpResponseRedirect:
         uid = self.kwargs.get('pk')
-        instance = File.objects.filter(id=uid).first()
+        instance: File | None = File.objects.filter(id=uid).first()
         file_form = UpdateFileForm(request.POST, request.FILES, instance=instance)
 
-        if file_form.is_valid():
-            instance.file_name = request.POST.get("file_name")
-            if file_data := request.FILES.get("file_data"):
-                instance.file_data = file_data
-                instance.is_reviewed = "not_reviewed_updated"
-            instance.save()
-            messages.success(request, 'The file has been updated successfully.')
-            return redirect('file_details', pk=instance.id)
-        messages.success(request, 'The file has not been updated.')
-        return redirect('file_edit', pk=instance.id)
+        if instance:
+            if file_form.is_valid():
+                instance.file_name = request.POST.get("file_name")
+                if file_data := request.FILES.get("file_data"):
+                    instance.file_data = file_data
+                    instance.is_reviewed = "not_reviewed_updated"
+                instance.save()
+                messages.success(request, 'The file has been updated successfully.')
+                return redirect('file_details', pk=instance.id)
+            messages.success(request, 'The file has not been updated.')
+            return redirect('file_edit', pk=instance.id)
+        messages.success(request, 'The file does not exist.')
+        return redirect('index')
 
 
 class FileDeleteView(LoginRequiredMixin, DeleteView):    # type: ignore
@@ -110,6 +115,10 @@ class FileDeleteView(LoginRequiredMixin, DeleteView):    # type: ignore
     context_object_name = 'user_file'
     success_url = '/'
 
-    def get_object(self, **kwargs: Dict[str, Any]) -> File:
+    def get_object(self, queryset: QuerySet[Any] | None = None) -> File | None:
         uid = self.kwargs.get('pk')
-        return File.objects.get(pk=uid)    # type: ignore
+        return File.objects.get(pk=uid)
+
+
+def healthcheck(request: Any) -> HttpResponse:
+    return render(request, 'health-check.html')

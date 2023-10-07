@@ -13,3 +13,4 @@ venv
 /.ruff_cache/
 /queries.yaml/
 /src/code_review__web/static/admin/
+/src/code_review__web/.mypy_cache/

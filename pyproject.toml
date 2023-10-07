@@ -1,64 +1,63 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
-[tool.setuptools.package-dir]
-src = "src"
-
-[project]
-name = "code_review"
+[tool.poetry]
+name = "src"
 version = "1.0.0"
 authors = [
-    {name = "Alexander Dedkov", email = "deadcove@mail.ru"},
+    "Alexander Dedkov <deadcove@mail.ru>",
 ]
+maintainers = [
+    "Alexander Dedkov <deadcove@mail.ru>",
+]
+license = "MIT"
 description = "CodeReview. To improve quality of code review this service was initiated as file storage with lint function."
 readme = "README.md"
-requires-python = ">=3.10"
+repository = "https://github.com/febux/CodeReview"
 classifiers = [
-    "Development Status :: 1 - Alpha",
     "Framework :: Django",
     "Natural Language :: English",
-    "Operating System :: OS Linux",
     "Programming Language :: Python :: 3.10",
 ]
-dependencies = [
-    "amqp==5.1.1",
-    "asgiref==3.7.2",
-    "async-timeout==4.0.3",
-    "billiard==4.1.0",
-    "celery==5.3.1",
-    "click==8.1.7",
-    "click-didyoumean==0.3.0",
-    "click-plugins==1.1.1",
-    "click-repl==0.3.0",
-    "Django==4.2.4",
-    "kombu==5.3.1",
-    "prompt-toolkit==3.0.39",
-    "psycopg2-binary==2.9.7",
-    "pylint==2.17.5",
-    "python-dateutil==2.8.2",
-    "pytz==2023.3",
-    "redis==5.0.0",
-    "six==1.16.0",
-    "sqlparse==0.4.4",
-    "typing_extensions==4.7.1",
-    "tzdata==2023.3",
-    "vine==5.0.0",
-    "wcwidth==0.2.6",
-    "django-allauth==0.56.1",
-    "mypy==1.5.1",
-    "mypy-extensions==1.0.0",
+include = [
+    { path = "src", format = ["sdist", "wheel"] },
 ]
 
-[project.optional-dependencies]
-dev = [
-  "flake8===6.1.0",
-  "ruff==0.0.287",
-  "django-stubs",
-  "ipdb",
-  "pip-tools",
-  "ruff",
-]
+[tool.poetry.dependencies]
+python = "^3.10"
+amqp = "==5.1.1"
+asgiref = "==3.7.2"
+async-timeout = "==4.0.3"
+billiard = "==4.1.0"
+celery = ">=5.3.1"
+click = "==8.1.7"
+click-didyoumean = "==0.3.0"
+click-plugins = "==1.1.1"
+click-repl = "==0.3.0"
+Django = "==4.2.4"
+kombu = ">=5.3.1"
+prompt-toolkit = "==3.0.39"
+psycopg2-binary = "==2.9.7"
+pylint = ">=2.17.5"
+python-dateutil = "==2.8.2"
+pytz = ">=2023.3"
+redis = ">=5.0.0"
+six = "==1.16.0"
+sqlparse = "==0.4.4"
+typing_extensions = "==4.7.1"
+tzdata = "==2023.3"
+vine = "==5.0.0"
+wcwidth = ">=0.2.6"
+django-allauth = ">=0.56.1"
+mypy = ">=1.5.1"
+mypy-extensions = "==1.0.0"
+flake8 = "==6.1.0"
+ruff = ">=0.0.287"
+django-stubs = {extras = ["compatible-mypy"], version = "^4.2.4"}
+ipdb = "*"
+pip-tools = "*"
+pre-commit = ">=3.3.3"
 
 [tool.mypy]
 files = "src"
@@ -68,9 +67,10 @@ ignore_missing_imports = true
 strict = true
 exclude = [
     "src/code_review__web/data/*",
+    "src/code_review__web/code_review__app/models.py",
 ]
 
-[tool.flake8]
+[tool.flake8]   # TODO: remove flake8 config
 ignore = [
     "D100",
     "D101",
@@ -96,7 +96,6 @@ max-line-length = 180
 indent-size = 4
 exclude = [
     "src/code_review__web/data/*",
-    "src/code_review__web/code_review_project/epylint/*",
 ]
 
 [tool.ruff]

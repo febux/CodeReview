@@ -9,7 +9,7 @@ import uuid
 from src.code_review__web.code_review__app.models import user_directory_path
 
 
-class Migration(migrations.Migration):  # type: ignore
+class Migration(migrations.Migration):
 
     initial = True
 

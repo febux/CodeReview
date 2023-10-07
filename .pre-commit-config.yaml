@@ -1,27 +1,26 @@
 repos:
+  - repo: https://github.com/python-poetry/poetry
+    rev: ''
+    hooks:
+      - id: poetry-check
+      - id: poetry-lock
+      - id: poetry-export
+      - id: poetry-install
   - repo: local
     hooks:
       - id: ruff
         name: Ruff
         stages: [commit]
         language: system
-        entry: pipenv run ruff ./src
+        entry: poetry run ruff ./src
         types: [python]
-        exclude: setup.py src/code_review__web/code_review_project/epylint/* src/code_review__web/data/*
-
-      - id: flake8
-        name: Flake8
-        stages: [commit]
-        language: system
-        entry: pipenv run flake8
-        types: [python]
-        exclude: setup.py
+        exclude: src/code_review__web/data/*
 
       - id: mypy
         name: MYPY
         stages: [commit]
         language: system
-        entry: pipenv run mypy
+        entry: poetry run mypy
         types: [python]
         pass_filenames: false
 

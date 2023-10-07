@@ -40,8 +40,16 @@ services:
       <<: *common-config
       <<: *db-config
     depends_on:
-      - code_review__redis
-      - code_review__db
+      code_review__redis:
+        condition: service_healthy
+      code_review__db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -nv --spider http://${DJANGO_HOST}:${DJANGO_PORT}/healthcheck || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -121,7 +129,8 @@ services:
     networks:
       - postgres
     depends_on:
-      - code_review__db
+      code_review__db:
+        condition: service_healthy
 
   code_review__manager_db:
     build:
@@ -137,7 +146,8 @@ services:
       <<: *common-config
       <<: *db-config
     depends_on:
-      - code_review__db
+      code_review__db:
+        condition: service_healthy
 
   code_review__redis:
     image: redis:6.2-alpine
@@ -149,6 +159,11 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes:
       - cache:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 3s
+      timeout: 3s
+      retries: 10
     deploy:
       resources:
         limits:
@@ -170,7 +185,13 @@ services:
       <<: *db-config
       <<: *redis-config
     depends_on:
-      - code_review__redis
+      code_review__redis:
+        condition: service_healthy
+    healthcheck:
+      test: celery -A code_review_project inspect ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
     deploy:
       resources:
         limits:
@@ -192,7 +213,13 @@ services:
       <<: *db-config
       <<: *redis-config
     depends_on:
-      - code_review__redis
+      code_review__redis:
+        condition: service_healthy
+    healthcheck:
+      test: celery -A code_review_project inspect ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
     deploy:
       resources:
         limits:

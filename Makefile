@@ -14,9 +14,8 @@ fix_permissions:
 	sudo chown $(ME):$(ME) -R .
 
 lint:
-	pipenv run ruff ./src
-	pipenv run mypy
-	pipenv run flake8
+	poetry run ruff ./src
+	poetry run mypy
 
 build:
 	docker compose build
@@ -26,6 +25,14 @@ drop:
 
 up:
 	docker compose up --remove-orphans --build \
+		code_review__db \
+		code_review__redis \
+		code_review__web \
+		code_review__celery \
+		code_review__celery_beat
+
+up_background:
+	docker compose up -d --remove-orphans --build \
 		code_review__db \
 		code_review__redis \
 		code_review__web \

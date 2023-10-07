@@ -4,7 +4,7 @@ import django.db.models.deletion
 import src.code_review__web.code_review__app.models
 
 
-class Migration(migrations.Migration):  # type: ignore
+class Migration(migrations.Migration):
 
     dependencies = [
         ('code_review__app', '0001_initial'),

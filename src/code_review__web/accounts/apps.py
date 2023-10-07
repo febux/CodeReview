@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class AccountsConfig(AppConfig):   # type: ignore
+class AccountsConfig(AppConfig):
     name = 'accounts'

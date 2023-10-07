@@ -1,9 +1,10 @@
-FROM python:3.10-slim
+FROM python:3.10-alpine
 
 WORKDIR /docker_app
 
 COPY ./src /docker_app/src
 COPY pyproject.toml /docker_app/pyproject.toml
+COPY README.md /docker_app/README.md
 
 RUN python -m pip install --upgrade pip && python -m pip install --upgrade build
 RUN --mount=type=cache,target=/root/.cache/pip \
