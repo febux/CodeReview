@@ -3,26 +3,20 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 text-center mb-5">
-        <h2 class="heading-section">Edit file</h2>
+        <h2 class="heading-section">Delete file</h2>
     </div>
 </div>
 
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
         <div class="input-wrap p-0">
-        <form method="POST" class="add-file-form" enctype="multipart/form-data">
+        <form method="POST" class="delete-file-form">
             {% csrf_token %}
             <div class="form-group">
-                {{ form.file_name }}
-            </div>
-            <div class="form-group">
-                {{ form.file_data }}
-            </div>
-            <div class="form-group">
-                <button type="submit" class="form-control btn btn-primary submit px-3">Save file</button>
+                <button type="submit" class="form-control btn btn-primary submit px-3">Delete file</button>
             </div>
             <div class="form-group d-md-flex">
-
+                <button type="button" class="form-control btn btn-outline-primary px-3" onclick="window.location.href='{% url 'file_details' user_file.id %}'">Cancel</button>
             </div>
         </form>
         </div>

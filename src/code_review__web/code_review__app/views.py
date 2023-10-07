@@ -3,6 +3,7 @@ from typing import Any, Dict, Tuple
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
@@ -87,22 +88,26 @@ class FileEditView(LoginRequiredMixin, UpdateView):    # type: ignore
         return File.objects.get(pk=uid)  # type: ignore
 
     def post(self, request: Any, *args: Tuple[Any], **kwargs: Dict[str, Any]) -> HttpResponseRedirect:
-        file_form = UpdateFileForm(request.POST, request.FILES)
+        uid = self.kwargs.get('pk')
+        instance = File.objects.filter(id=uid).first()
+        file_form = UpdateFileForm(request.POST, request.FILES, instance=instance)
 
         if file_form.is_valid():
-            uid = self.kwargs.get('pk')
-            instance = File.objects.filter(id=uid).first()
-            instance.file_name = request.POST["file_name"]
-            instance.file_data = request.FILES["file_data"]
-            instance.is_reviewed = "not_reviewed_updated"
+            instance.file_name = request.POST.get("file_name")
+            if file_data := request.FILES.get("file_data"):
+                instance.file_data = file_data
+                instance.is_reviewed = "not_reviewed_updated"
             instance.save()
-            return redirect('file_details')
-        return redirect('file_edit')
+            messages.success(request, 'The file has been updated successfully.')
+            return redirect('file_details', pk=instance.id)
+        messages.success(request, 'The file has not been updated.')
+        return redirect('file_edit', pk=instance.id)
 
 
 class FileDeleteView(LoginRequiredMixin, DeleteView):    # type: ignore
     template_name = 'delete_file.html'
     queryset = File.objects.all()
+    context_object_name = 'user_file'
     success_url = '/'
 
     def get_object(self, **kwargs: Dict[str, Any]) -> File:
