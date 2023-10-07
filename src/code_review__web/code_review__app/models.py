@@ -32,8 +32,12 @@ class BaseModel(Model):
 
 
 class File(BaseModel):
-    file_name = CharField(verbose_name="Name", max_length=120, unique=True)    # type: ignore
-    file_data = FileField(    # type: ignore
+    file_name = CharField(
+        verbose_name="Name",
+        max_length=120,
+        unique=True,
+    )   # type: ignore
+    file_data = FileField(
         verbose_name="File",
         upload_to=user_directory_path,
         validators=[FileExtensionValidator(allowed_extensions=['py'])],

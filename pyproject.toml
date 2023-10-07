@@ -67,7 +67,7 @@ ignore_missing_imports = true
 strict = true
 exclude = [
     "src/code_review__web/data/*",
-    "src/code_review__web/code_review__app/models.py",
+#    "src/code_review__web/code_review__app/models.py",
 ]
 
 [tool.flake8]   # TODO: remove flake8 config
