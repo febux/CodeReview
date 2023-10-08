@@ -13,7 +13,7 @@ from src.code_review__web.code_review__app.forms import CreateFileForm, UpdateFi
 from src.code_review__web.code_review__app.models import File, FileLog
 
 
-class FileDetail(LoginRequiredMixin, DetailView[File]):
+class FileDetail(LoginRequiredMixin, DetailView):   # type: ignore
     model = File
     template_name = 'details_file.html'
     context_object_name = 'user_file'
@@ -35,7 +35,7 @@ class FileDetail(LoginRequiredMixin, DetailView[File]):
         return context
 
 
-class FilesList(LoginRequiredMixin, ListView[File]):
+class FilesList(LoginRequiredMixin, ListView):  # type: ignore
     model = File
     queryset = File.objects.order_by('-id')
     template_name = 'index.html'
@@ -63,7 +63,7 @@ class FilesList(LoginRequiredMixin, ListView[File]):
 #         return context
 
 
-class FileAddView(LoginRequiredMixin, CreateView[File, CreateFileForm]):
+class FileAddView(LoginRequiredMixin, CreateView):  # type: ignore
     template_name = 'add_file.html'
     form_class = CreateFileForm
     success_url = '/'
@@ -80,7 +80,7 @@ class FileAddView(LoginRequiredMixin, CreateView[File, CreateFileForm]):
         return redirect('file_add')
 
 
-class FileEditView(LoginRequiredMixin, UpdateView[File, UpdateFileForm]):
+class FileEditView(LoginRequiredMixin, UpdateView):   # type: ignore
     template_name = 'edit_file.html'
     form_class = UpdateFileForm
     success_url = '/'
@@ -109,7 +109,7 @@ class FileEditView(LoginRequiredMixin, UpdateView[File, UpdateFileForm]):
         return redirect('index')
 
 
-class FileDeleteView(LoginRequiredMixin, DeleteView[File]):     # type: ignore
+class FileDeleteView(LoginRequiredMixin, DeleteView):     # type: ignore
     template_name = 'delete_file.html'
     queryset = File.objects.all()
     context_object_name = 'user_file'
