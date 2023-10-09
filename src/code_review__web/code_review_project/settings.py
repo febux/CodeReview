@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
-from typing import List
+from typing import List, Any
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +26,7 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool(sdistutils.util.strtobool(os.environ.get("DEBUG")))
 
 if DEBUG:
     ALLOWED_HOSTS: List[str] = ['localhost', '127.0.0.1', '[::1]', '0.0.0.0']
@@ -150,8 +150,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'data/')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-STATIC_ROOT = BASE_DIR / "static"
-# STATICFILES_DIRS: List[Any] = [os.path.join(SITE_ROOT, 'static/')]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS: List[Any] = [os.path.join(SITE_ROOT, 'static/')]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
