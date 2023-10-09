@@ -23,19 +23,36 @@ x-db-config: &db-config
   POSTGRES_DB: ${POSTGRES_DB}
 
 services:
+  code_review__balancer:
+    build:
+      context: "."
+      dockerfile: "srv/code-review--balancer/Dockerfile"
+    networks:
+      - site
+    ports:
+      - "${DJANGO_PORT__PROXY}:8000"  # code_review__web
+    volumes:
+      - ./src/code_review__web/static/:/docker_app/src/code_review__web/static/:ro
+      - ./src/code_review__web/data/:/docker_app/src/code_review__web/data/:ro
+      - ./src/code_review__balancer/:/etc/nginx/conf.d/:ro
+    depends_on:
+      code_review__web:
+        condition: service_healthy
+
   code_review__web:
     build:
       context: "."
       dockerfile: "srv/code-review--web/Dockerfile"
-    command: "python manage.py runserver ${DJANGO_HOST}:${DJANGO_PORT}"
+    command: "gunicorn code_review_project.wsgi:application --bind ${DJANGO_HOST}:${DJANGO_PORT}"
     restart: 'no'
     networks:
       - postgres
       - redis
+      - site
     volumes:
       - ./src:/docker_app/src
-    ports:
-      - "${DJANGO_PORT}:${DJANGO_PORT}"
+    expose:
+      - ${DJANGO_PORT}
     environment:
       <<: *common-config
       <<: *db-config
@@ -91,8 +108,8 @@ services:
       - "pg_stat_statements.track=all"
     networks:
       - postgres
-    ports:
-      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    expose:
+      - ${POSTGRES_PORT}
     volumes:
       - data:/var/lib/postgresql/data
     environment:
@@ -118,8 +135,8 @@ services:
       PG_EXPORTER_EXTEND_QUERY_PATH: "/etc/postgres_exporter/queries.yaml"
     volumes:
       - ./queries.yaml:/etc/postgres_exporter/queries.yaml:ro
-    ports:
-      - "9187:9187"
+    expose:
+      - 9187
     restart: unless-stopped
     deploy:
       resources:
@@ -154,8 +171,8 @@ services:
     restart: always
     networks:
       - redis
-    ports:
-      - "${REDIS_PORT}:${REDIS_PORT}"
+    expose:
+      - ${REDIS_PORT}
     command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
     volumes:
       - cache:/data
@@ -231,9 +248,12 @@ volumes:
   cache:
     driver: local
   data:
+  nginx_conf:
 
 networks:
   postgres:
     driver: bridge
   redis:
+    driver: bridge
+  site:
     driver: bridge

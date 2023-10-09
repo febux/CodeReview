@@ -23,9 +23,18 @@ build:
 drop:
 	docker-compose down -v
 
-up:
+up__dev:
 	docker-compose up --remove-orphans --build \
 		code_review__db \
+		code_review__redis \
+		code_review__web \
+		code_review__celery \
+		code_review__celery_beat
+
+up__prod:
+	docker-compose -f docker-compose.prod.yml up --remove-orphans --build \
+		code_review__db \
+		code_review__balancer \
 		code_review__redis \
 		code_review__web \
 		code_review__celery \
