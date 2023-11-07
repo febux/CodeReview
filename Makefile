@@ -40,7 +40,16 @@ up__prod:
 		code_review__celery \
 		code_review__celery_beat
 
-up_background:
+up_background__prod:
+	docker-compose -f docker-compose.prod.yml up -d --remove-orphans --build \
+		code_review__db \
+		code_review__balancer \
+		code_review__redis \
+		code_review__web \
+		code_review__celery \
+		code_review__celery_beat
+
+up_background__dev:
 	docker-compose up -d --remove-orphans --build \
 		code_review__db \
 		code_review__redis \

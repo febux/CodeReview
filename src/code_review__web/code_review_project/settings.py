@@ -33,6 +33,8 @@ if DEBUG:
     ALLOWED_HOSTS: List[str] = ['localhost', '127.0.0.1', '[::1]', '0.0.0.0']
 else:
     ALLOWED_HOSTS: List[str] = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")    # type: ignore
+    CSRF_TRUSTED_ORIGINS: List[str] = os.environ.get("CSRF_TRUSTED_ORIGINS").split(" ")     # type: ignore
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # Application definition
@@ -123,6 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ACCOUNT_FORMS = {
     'login': 'accounts.forms.CustomLoginForm',
     'signup': 'accounts.forms.RegisterForm',
+    'change_password': 'accounts.forms.CustomChangePasswordForm',
 }
 
 AUTHENTICATION_BACKENDS = [
@@ -151,7 +154,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'data/')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 SITE_ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "static"
 STATICFILES_DIRS: List[Any] = [os.path.join(SITE_ROOT, 'static/')]
 
 # Default primary key field type

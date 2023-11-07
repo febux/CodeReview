@@ -9,7 +9,7 @@ DEBUG="True"  # default True
 APPLICATION_ENV="local"  # default 'local' for local access
 
 DJANGO_SITE="0.0.0.0"  # default 0.0.0.0 for local access
-
+CSRF_TRUSTED_ORIGINS="http://example:12345 https://example:12345"
 DJANGO_HOST="0.0.0.0"  # default 0.0.0.0 for local access
 DJANGO_PORT__PROXY=12345  # default 12345 for test access
 DJANGO_PORT="8000"  # default 8000

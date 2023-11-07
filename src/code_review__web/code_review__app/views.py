@@ -9,6 +9,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView, ListView, CreateView, DeleteView, UpdateView
 
+from src.code_review__web.code_review__app.config import PAGINATION_VIEW
 from src.code_review__web.code_review__app.forms import CreateFileForm, UpdateFileForm
 from src.code_review__web.code_review__app.models import File, FileLog
 
@@ -37,30 +38,16 @@ class FileDetail(LoginRequiredMixin, DetailView):   # type: ignore
 
 class FilesList(LoginRequiredMixin, ListView):  # type: ignore
     model = File
-    queryset = File.objects.order_by('-id')
     template_name = 'index.html'
     context_object_name = 'user_files'
-    paginate_by = 10
+    paginate_by = PAGINATION_VIEW
 
-    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context['time_now'] = datetime.utcnow()
-        context['user_files'] = File.objects.filter(fk_user__id=self.request.user.id).order_by('-id')    # type: ignore
-        return context
-
-
-# class FilesFilter(ListView):
-#     model = File
-#     queryset = File.objects.order_by('-id')
-#     template_name = 'search.html'
-#     context_object_name = 'user_files'
-#     ordering = ['-created_at']
-#     paginate_by = 10
-#
-#     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
-#         context = super().get_context_data(**kwargs)
-#         # context['filter'] = PostFilter(self.request.GET, queryset=self.get_queryset())
-#         return context
+    def get_queryset(self) -> QuerySet[File]:
+        query = self.request.GET.get('file_name')
+        user_files = File.objects.filter(fk_user__id=self.request.user.id).order_by('-id')  # type: ignore
+        if query:
+            return user_files.filter(file_name__icontains=query)
+        return user_files
 
 
 class FileAddView(LoginRequiredMixin, CreateView):  # type: ignore
